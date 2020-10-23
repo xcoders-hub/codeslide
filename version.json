@@ -1,12 +1,11 @@
 {
-    "version": "5.0",
-    "release_date": "10/16/2020",
+    "version": "4.0",
+    "release_date": "9/25/2020",
     "updates": [
         "Fixing Update Features",
         "Add Custom Error Message",
         "Add Video Player & Embed",
         "Add Hls Stream Option",
-        "Add Google Photos Player + Download",
-        "Added One Drive Download option"
+        "Add Google Photos Player + Download"
     ]
 }
