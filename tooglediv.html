@@ -1,0 +1,17 @@
+<script>
+$(function () {
+$('#radioUsageNo').change(function () {                
+ $('#customdata').toggle(this.checked);
+}).change(); 
+});
+</script>
+<div class="custom-control custom-radio">
+<input class="custom-control-input" id="playread" type="radio" name="radioUsage">
+<label class="custom-control-label" for="playread">PlayReady</label>
+</div>
+<div class="form-row" id="playreadydiv">
+<!-- Form Group (organization name)-->
+<div class="form-group col-md-10">
+<label for="exampleFormControlInput1">PlayReady url</label>
+<input class="form-control ml-1 mr-4" id="plyreadyurl" type="text" placeholder="Playready url">
+</div>
