@@ -1,11 +1,4 @@
 <?php
-
-/**
-* Updated: Mohammad M. AlBanna
-* Website: MBanna.info
-*/
-
-
 //MySQL server and database
 $dbhost = 'localhost';
 $dbuser = '#';
