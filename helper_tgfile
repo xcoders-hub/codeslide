@@ -1,0 +1,12 @@
+#fatal error: Python.h: No such file or directory
+Fix:
+For apt (Ubuntu, Debian...):
+
+sudo apt-get install python-dev   # for python2.x installs
+sudo apt-get install python3-dev  # for python3.x installs
+For yum (CentOS, RHEL...):
+
+sudo yum install python-devel   # for python2.x installs
+sudo yum install python3-devel   # for python3.x installs
+
+Install Wheel ......
