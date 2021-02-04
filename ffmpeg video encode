@@ -1,0 +1,4 @@
+<?php
+exec("/usr/bin/ffmpeg");
+exec('ffmpeg -i movie.mkv -vf "scale=480:-1" video.mkv');
+?>
