@@ -1,0 +1,65 @@
+User-Agent: *
+
+Allow: /wp-content/uploads/
+Disallow: /cgi-bin
+Disallow: /wp-includes/   
+Disallow: /wp-admin/
+
+Sitemap: https://codeslide.in/sitemap.xml  
+Disallow: /?s=   
+Disallow: /search
+
+Allow: /feed/$
+Disallow: /feed   
+Disallow: /comments/feed   
+Disallow: /*/feed/$   
+Disallow: /*/feed/rss/$   
+Disallow: /*/trackback/$   
+Disallow: /*/*/feed/$   
+Disallow: /*/*/feed/rss/$   
+Disallow: /*/*/trackback/$   
+Disallow: /*/*/*/feed/$   
+Disallow: /*/*/*/feed/rss/$   
+Disallow: /*/*/*/trackback/$
+
+
+Allow: /*.js$
+Allow: /*.css$
+Allow: /wp-includes/js/wp-emoji-release.min.js?ver=5.1.1
+Allow: /wp-includes/js/jquery/jquery.js?ver=1.12.4
+Allow: /wp-includes/css/dashicons.min.css?ver=5.1.1
+
+
+User-agent: Googlebot-Image
+Allow: /wp-content/uploads/
+
+User-agent: Adsbot-Google
+Allow: /
+
+User-agent: Googlebot-Mobile
+Allow: /
+
+User-agent: MSIECrawler
+Disallow: /
+
+User-agent: WebCopier
+Disallow: /
+
+User-agent: HTTrack
+Disallow: /
+
+User-agent: Microsoft.URL.Control
+Disallow: /
+
+User-agent: libwww
+Disallow: /
+
+
+User-agent: noxtrumbot
+Crawl-delay: 50
+
+User-agent: msnbot
+Crawl-delay: 30
+
+User-agent: Slurp
+Crawl-delay: 10
