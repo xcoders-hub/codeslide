@@ -1,0 +1,28 @@
+<html>
+
+   <section class="section" itemscope itemtype="http://schema.org/HomePage">
+        <div class="container">
+
+            <h1 class="title has-text-centered">Upload Files</h1>
+            <div id="file-upload-area"></div>
+
+        </div>
+    </section>
+
+    <link href="https://releases.transloadit.com/uppy/v1.27.0/uppy.min.css" rel="stylesheet">
+    <script src="https://releases.transloadit.com/uppy/v1.27.0/uppy.min.js"></script>
+</html>
+    <script>
+     var uppy = Uppy.Core()
+        .use(Uppy.Url, { companionUrl: 'https://tusd.tusdemo.net/files/' })
+        //.use(Uppy.GoogleDrive, { companionUrl: 'https://precodes.com/uppy/' })
+        .use(Uppy.Webcam, {})
+        .use(Uppy.Dashboard, { inline: true, proudlyDisplayPoweredByUppy: false, theme:'dark',target: '#file-upload-area',  plugins: ['Url', 'Webcam', 'GoogleDrive'] })
+        .use(Uppy.Tus, { endpoint: 'https://tusd.tusdemo.net/files/' })
+        uppy.on('complete', result => {
+      console.log('successful files:', result.successful)
+      console.log('failed files:', result.failed)
+    })
+    </script>
+
+  
