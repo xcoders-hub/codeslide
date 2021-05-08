@@ -1,0 +1,27 @@
+<script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+<script>
+var adSlot1;
+window.googletag = window.googletag || {
+    cmd: []
+};
+googletag.cmd.push(function() {
+    adSlot1 = googletag.defineSlot('/21903444296/codeslideh',[[700,90],[300, 250]], 'div-gpt-ad-1620496102048-0').addService(googletag.pubads());
+    googletag.pubads().enableSingleRequest();
+    googletag.enableServices();
+});
+var refreshAllSlots = function() {
+      googletag.cmd.push(function() {
+        googletag.pubads().refresh();
+      });
+    };
+const interval = setInterval(function() {
+    refreshAllSlots()
+}, 15000);
+</script>
+<!-- /21903444296/codeslideh -->
+<div id='div-gpt-ad-1620496102048-0'>
+	
+<script>
+    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1620496102048-0'); });
+</script>
+</div>
