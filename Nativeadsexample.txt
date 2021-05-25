@@ -1,0 +1,479 @@
+How to implement native ads in android studio 
+Tutorial By Codeslide
+Step: 1 
+
+implementation 'com.google.android.gms:play-services-ads:19.2.0' 
+
+
+
+Step: 2 
+
+	<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub 3940256099942544~3347511713"/> 
+
+<meta-data android:name="com.google.android.gms.ads.AD_MANAGER_APP" android:value="true"/> 
+
+
+
+Step: 3 
+
+<uses-permission android:name="android.permission.INTERNET"/> 
+
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/> 
+
+<uses-permission android:name="android.permission.WAKE_LOCK"/> 
+
+<uses-permission 
+
+android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"/> 
+
+
+
+Step: 4 
+
+<string name="ADMOB_ADS_UNIT_ID">ca-app-pub-3940256099942544/2247696110</string> <string name="ad_attribution">Ad</string> 
+
+Step: 5 
+
+<style name="AppTheme.AdAttribution"> 
+
+<item name="android:textSize">12sp</item> 
+
+<item name="android:textColor">#ffffff</item> 
+
+<item name="android:layout_gravity">left</item> 
+
+<item name="android:background">#ffcc66</item> 
+
+<item name="android:layout_width">wrap_content</item> 
+
+<item name="android:layout_height">wrap_content</item> 
+
+<item name="android:text">@string/ad_attribution</item> 
+
+<item name="android:height">15dp</item> 
+
+<item name="android:width">15dp</item> 
+
+</style> 
+
+
+
+Step: 6 
+
+Create a layout ad_unified.xml 
+
+<?xml version="1.0" encoding="utf-8"?> 
+
+<com.google.android.gms.ads.formats.UnifiedNativeAdView 
+
+xmlns:android="http://schemas.android.com/apk/res/android" 
+
+xmlns:aapt="http://schemas.android.com/aapt"
+
+xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" 
+
+android:layout_height="wrap_content"> 
+
+<LinearLayout 
+
+android:layout_width="match_parent" 
+
+android:layout_height="wrap_content" 
+
+android:layout_gravity="center" 
+
+android:background="#fff" 
+
+android:minHeight="50dp" 
+
+android:orientation="vertical"> 
+
+<TextView style="@style/AppTheme.AdAttribution" /> <LinearLayout 
+
+android:layout_width="match_parent" 
+
+android:layout_height="wrap_content" 
+
+android:orientation="vertical" 
+
+android:paddingLeft="20dp" 
+
+android:paddingTop="3dp" 
+
+android:paddingRight="20dp"> 
+
+<LinearLayout 
+
+android:layout_width="match_parent" 
+
+android:layout_height="wrap_content" 
+
+android:orientation="horizontal"> 
+
+<ImageView 
+
+android:id="@+id/ad_app_icon" 
+
+android:layout_width="40dp" 
+
+android:layout_height="40dp" 
+
+android:adjustViewBounds="true" 
+
+android:paddingRight="5dp" 
+
+android:paddingBottom="5dp" /> 
+
+<LinearLayout 
+
+android:layout_width="match_parent" 
+
+android:layout_height="wrap_content" 
+
+android:orientation="vertical"> 
+
+<TextView 
+
+android:id="@+id/ad_headline" 
+
+android:layout_width="match_parent" 
+
+android:layout_height="wrap_content" 
+
+android:textColor="#0000ff" 
+
+android:textSize="16sp" 
+
+android:textStyle="bold" /> 
+
+<LinearLayout 
+
+android:layout_width="match_parent" 
+
+android:layout_height="wrap_content"> 
+
+<TextView 
+
+android:id="@+id/ad_advertiser" 
+
+android:layout_width="wrap_content" 
+
+android:layout_height="match_parent"
+
+android:gravity="bottom" 
+
+android:textSize="14sp" 
+
+android:textStyle="bold" /> 
+
+<RatingBar 
+
+android:id="@+id/ad_stars" 
+
+style="?android:attr/ratingBarStyleSmall" android:layout_width="wrap_content" 
+
+android:layout_height="wrap_content" android:isIndicator="true" 
+
+android:numStars="5" 
+
+android:stepSize="0.5" /> 
+
+</LinearLayout> 
+
+</LinearLayout> 
+
+</LinearLayout> 
+
+<LinearLayout 
+
+android:layout_width="match_parent" 
+
+android:layout_height="wrap_content" android:orientation="vertical"> 
+
+<TextView 
+
+android:id="@+id/ad_body" 
+
+android:layout_width="wrap_content" 
+
+android:layout_height="wrap_content" android:layout_marginRight="20dp" 
+
+android:textSize="12sp" /> 
+
+	<com.google.android.gms.ads.formats.MediaView android:id="@+id/ad_media" 
+
+android:layout_width="225dp" 
+
+android:layout_height="156dp" 
+
+android:layout_gravity="center_horizontal" android:layout_marginTop="5dp" /> 
+
+<LinearLayout 
+
+android:layout_width="wrap_content" 
+
+android:layout_height="wrap_content" android:layout_gravity="end" 
+
+android:orientation="horizontal" 
+
+android:paddingTop="10dp" 
+
+android:paddingBottom="10dp"> 
+
+<TextView 
+
+android:id="@+id/ad_price" 
+
+android:layout_width="wrap_content" 
+
+android:layout_height="wrap_content" android:paddingLeft="5dp" 
+
+android:paddingRight="5dp" 
+
+android:textSize="12sp" /> 
+
+<TextView 
+
+android:id="@+id/ad_store" 
+
+android:layout_width="wrap_content"
+
+android:layout_height="wrap_content" 
+
+android:paddingLeft="5dp" 
+
+android:paddingRight="5dp" 
+
+android:textSize="12sp" /> 
+
+<Button 
+
+android:id="@+id/ad_call_to_action" 
+
+android:layout_width="wrap_content" 
+
+android:layout_height="wrap_content" 
+
+android:background="@drawable/btn" 
+
+android:gravity="center" 
+
+android:textSize="12sp" /> 
+
+</LinearLayout> 
+
+</LinearLayout> 
+
+</LinearLayout> 
+
+</LinearLayout> 
+
+</com.google.android.gms.ads.formats.UnifiedNativeAdView> 
+
+
+
+Step: 7 
+
+implementation 'com.google.android.material:material:1.0.0' 
+
+Button Design 
+
+<?xml version="1.0" encoding="utf-8"?> 
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android" 
+
+xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:shape="rectangle"> 
+
+<corners android:radius="50dp"/> 
+
+	<gradient android:startColor="#2196F3" android:endColor="#CDDC39" android:angle="45" android:type="linear" android:centerX="35%" android:centerColor="#E91E63"/> 
+
+<padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp"/> <size android:height="50dp" android:width="340dp"/> 
+
+</shape> 
+
+
+
+Step: 8 
+
+<LinearLayout 
+
+android:layout_width="match_parent" 
+
+android:layout_height="match_parent" 
+
+android:orientation="vertical"> 
+
+<FrameLayout 
+
+android:id="@+id/fl_adplaceholder" 
+
+android:layout_width="match_parent" 
+
+android:layout_height="wrap_content" /> 
+
+</LinearLayout> 
+
+
+
+Step: 9 
+
+private UnifiedNativeAd nativeAd; 
+
+MobileAds.initialize(this, getString(R.string.ADMOB_ADS_UNIT_ID)); 
+
+refreshAd();
+
+Step: 10 
+
+	private void populateUnifiedNativeAdView(UnifiedNativeAd nativeAd, UnifiedNativeAdView adView) { adView.setMediaView((MediaView) adView.findViewById(R.id.ad_media)); 
+
+adView.setHeadlineView(adView.findViewById(R.id.ad_headline)); 
+
+adView.setBodyView(adView.findViewById(R.id.ad_body)); 
+
+adView.setCallToActionView(adView.findViewById(R.id.ad_call_to_action)); 
+
+adView.setIconView(adView.findViewById(R.id.ad_app_icon)); 
+
+adView.setPriceView(adView.findViewById(R.id.ad_price)); 
+
+adView.setAdvertiserView(adView.findViewById(R.id.ad_advertiser)); 
+
+adView.setStoreView(adView.findViewById(R.id.ad_store)); 
+
+adView.setStarRatingView(adView.findViewById(R.id.ad_stars)); 
+
+((TextView)adView.getHeadlineView()).setText(nativeAd.getHeadline()); 
+
+adView.getMediaView().setMediaContent(nativeAd.getMediaContent()); 
+
+if (nativeAd.getBody() == null) { 
+
+adView.getBodyView().setVisibility(View.INVISIBLE); 
+
+} else { 
+
+adView.getBodyView().setVisibility(View.VISIBLE); 
+
+((TextView) adView.getBodyView()).setText(nativeAd.getBody()); 
+
+} 
+
+if (nativeAd.getCallToAction() == null) { 
+
+adView.getCallToActionView().setVisibility(View.INVISIBLE); 
+
+} else { 
+
+adView.getCallToActionView().setVisibility(View.VISIBLE); 
+
+	((Button) adView.getCallToActionView()).setText(nativeAd.getCallToAction()); } 
+
+if (nativeAd.getIcon() == null) { 
+
+adView.getIconView().setVisibility(View.GONE); 
+
+} else { 
+
+	((ImageView) adView.getIconView()).setImageDrawable(nativeAd.getIcon().getDrawable()); adView.getIconView().setVisibility(View.VISIBLE); 
+
+} 
+
+if (nativeAd.getPrice() == null) { 
+
+adView.getPriceView().setVisibility(View.INVISIBLE); 
+
+} else { 
+
+adView.getPriceView().setVisibility(View.VISIBLE); 
+
+((TextView) adView.getPriceView()).setText(nativeAd.getPrice()); 
+
+} 
+
+if (nativeAd.getStore() == null) { 
+
+adView.getStoreView().setVisibility(View.INVISIBLE); 
+
+} else { 
+
+adView.getStoreView().setVisibility(View.VISIBLE); 
+
+((TextView) adView.getStoreView()).setText(nativeAd.getStore()); 
+
+} 
+
+if (nativeAd.getStarRating() == null) { 
+
+adView.getStarRatingView().setVisibility(View.INVISIBLE); 
+
+} else {
+
+	((RatingBar) adView.getStarRatingView()).setRating(nativeAd.getStarRating().floatValue()); adView.getStarRatingView().setVisibility(View.VISIBLE); 
+
+} 
+
+if (nativeAd.getAdvertiser() == null) { 
+
+adView.getAdvertiserView().setVisibility(View.INVISIBLE); 
+
+} else { 
+
+((TextView) adView.getAdvertiserView()).setText(nativeAd.getAdvertiser()); 
+
+adView.getAdvertiserView().setVisibility(View.VISIBLE); 
+
+} 
+
+adView.setNativeAd(nativeAd); 
+
+} 
+
+
+
+Step: 11 
+
+private void refreshAd() { 
+
+AdLoader.Builder builder = new AdLoader.Builder(this, getString(R.string.ADMOB_ADS_UNIT_ID)); builder.forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() { @Override 
+
+public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) { 
+
+if (nativeAd != null) { 
+
+nativeAd.destroy(); 
+
+} 
+
+nativeAd = unifiedNativeAd; 
+
+FrameLayout frameLayout = findViewById(R.id.fl_adplaceholder); 
+
+	UnifiedNativeAdView adView = (UnifiedNativeAdView) getLayoutInflater().inflate(R.layout.ad_unified, null); populateUnifiedNativeAdView(unifiedNativeAd, adView); 
+
+frameLayout.removeAllViews(); 
+
+frameLayout.addView(adView); 
+
+} 
+
+}); 
+
+NativeAdOptions adOptions = new NativeAdOptions.Builder().build(); 
+
+builder.withNativeAdOptions(adOptions); 
+
+AdLoader adLoader = builder.withAdListener (new AdListener(){ 
+
+@Override 
+
+public void onAdFailedToLoad(int i) { 
+
+} 
+
+}).build(); 
+
+adLoader.loadAd(new AdRequest.Builder().build()); 
+
+}
