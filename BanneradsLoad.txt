@@ -25,3 +25,29 @@ AdView mAdView = new AdView(this);
     mAdView.loadAd(adRequest);
    // else Log state of adsize/adunit
 ((LinearLayout)findViewById(R.id.adView)).addView(mAdView);
+
+
+### Condition
+
+AdView mAdView = new AdView(this);
+        mAdView.setAdSize(AdSize.BANNER);
+        mAdView.setAdUnitId(Constant.aboutUsList.getBanner_ad_id());
+        if ((Constant.aboutUsList.isBanner_ad()) || (Constant.aboutUsList.isInterstitial_ad()) || (Constant.aboutUsList.isRewarded_video_ads())) {
+            if (getBannerAdType() || Constant.aboutUsList.getInterstitial_ad_type().equals("admob")) {
+                if (getBannerAdType() && Constant.aboutUsList.isBanner_ad()) {
+                    isAdMOb = true;
+                }
+
+            } else {
+                if (Constant.aboutUsList.isBanner_ad()) {
+                    AdRequest adRequest = new AdRequest.Builder().build();
+                    if (mAdView.getAdSize() != null || mAdView.getAdUnitId() != null)
+                        mAdView.loadAd(adRequest);
+                    ((LinearLayout) findViewById(R.id.adView)).addView(mAdView);
+                } else {
+                    linearLayout.setVisibility(View.GONE);
+                }
+            }
+        } else {
+            linearLayout.setVisibility(View.GONE);
+        }
