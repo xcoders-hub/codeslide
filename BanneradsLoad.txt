@@ -1,0 +1,27 @@
+Load Banner Ads Programatically Guide.
+
+dependency: implementation 'com.google.android.gms:play-services-ads:16.0.0'
+
+
+
+xml:
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:id="@+id/adView"
+    />
+
+java:
+
+AdView mAdView = new AdView(this);
+    mAdView.setAdSize(AdSize.BANNER);
+    mAdView.setAdUnitId(AD_UNIT_ID);
+    AdRequest adRequest = new AdRequest.Builder()
+        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+        .build();
+    if(mAdView.getAdSize() != null || mAdView.getAdUnitId() != null)
+    mAdView.loadAd(adRequest);
+   // else Log state of adsize/adunit
+((LinearLayout)findViewById(R.id.adView)).addView(mAdView);
