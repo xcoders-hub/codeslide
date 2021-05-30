@@ -25,7 +25,7 @@ echo $jl.fileset().$jr;
     echo base64_decode('R2V0dGluZyBOdWxsIFJlc3BvbnNl');
 }
 function fileset(){
-$serveruri= 'http://educke.com/videos/';
+$serveruri= '';
 $files = glob("*.mp4");
 foreach ($files as $file){
     if(is_file($file)){
