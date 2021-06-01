@@ -1,39 +1,27 @@
 <?php
-$path = '/';
-$files = glob("*.mp4");
-$serveruri= ' ';
+header('Content-Type: application/json');
 
-if($_GET['apikey'] == 'connect'){
-foreach ($files as $file){
-    if(is_file($file)){
-        echo $data = '{"video_url":"'.$serveruri.rawurlencode($file).'"}'; //$data = '{"video":[{"video_url":"'.$file.'"}]}'
-    }
-}
-}else {
-    echo base64_decode('R2V0dGluZyBOdWxsIFJlc3BvbnNl');
-}
+$dir          = "./vid"; //path
 
-#####Later We try ####
-?>
-<?php
-if($_GET['apikey'] == 'connect'){
-$path = '/videos';
-$jl=  '[';
-$jr=  ']';
-echo $jl.fileset().$jr;
-}else {
-    echo base64_decode('R2V0dGluZyBOdWxsIFJlc3BvbnNl');
-}
-function fileset(){
-$serveruri= '';
-$files = glob("*.mp4");
-foreach ($files as $file){
-    if(is_file($file)){
-    //   return $file; //$data = '{"video":[{"video_url":"'.$file.'"}]}'
-    $vidurl= '{"video_url": "'.$serveruri.rawurlencode($file).'" },';
-     echo $vidurl;
+$list = array(); //main array
+$serveruri = "https://educke.com/videos/";
+if(is_dir($dir)){
+    if($dh = opendir($dir)){
+        while(($file = readdir($dh)) != false){
+
+            if($file == "." or $file == ".."){
+                //...
+            } else { //create object with two fields
+                $list3 = array('video_url' => $serveruri.rawurlencode($file));
+               
+                array_push($list, $list3);
+            }
+        }
     }
-}
+
+    $return_array = array('files'=> $list);
+
+    echo json_encode($return_array);
 }
 ?>
 
