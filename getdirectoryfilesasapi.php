@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 $dir          = "./vid"; //path
 
 $list = array(); //main array
-$serveruri = "https://educke.com/videos/";
+$serveruri = "https://#####/videos/";
 if(is_dir($dir)){
     if($dh = opendir($dir)){
         while(($file = readdir($dh)) != false){
