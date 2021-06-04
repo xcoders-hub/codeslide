@@ -1,30 +1,34 @@
-<?php
 header('Content-Type: application/json');
+function shuffle_assoc($list) { 
+  if (!is_array($list)) return $list; 
 
-$dir          = "./vid"; //path
+  $keys = array_keys($list); 
+  shuffle($keys); 
+  $random = array(); 
+  foreach ($keys as $key) { 
+    $random[$key] = $list[$key]; 
+  }
+  return $random; 
+} 
+$dir          = "vid"; //path
 
 $list = array(); //main array
-$serveruri = "https://#####/videos/";
+$serveruri = "http://codeslide.in/test/vidapi/vid/";
 if(is_dir($dir)){
     if($dh = opendir($dir)){
         while(($file = readdir($dh)) != false){
-
             if($file == "." or $file == ".."){
                 //...
             } else { //create object with two fields
-                $list3 = array('video_url' => $serveruri.rawurlencode($file));
-               
+                $list3 = array(
+                    'video_url' => $serveruri.rawurlencode($file),
+                    'video_title' => 'My Video Title'
+                    );                 
                 array_push($list, $list3);
             }
         }
     }
 
-    $return_array = array('files'=> $list);
-    $fin_links = array_rand(array_flip($return_array)); // To Shuffle the links
-
-    echo json_encode($return_array);
+    $return_array = $list;   
+    echo json_encode(shuffle_assoc($return_array));
 }
-?>
-
-
-
