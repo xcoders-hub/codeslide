@@ -20,6 +20,7 @@ if(is_dir($dir)){
     }
 
     $return_array = array('files'=> $list);
+    $fin_links = array_rand(array_flip($return_array)); // To Shuffle the links
 
     echo json_encode($return_array);
 }
