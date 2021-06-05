@@ -1,3 +1,4 @@
+<?php
 header('Content-Type: application/json');
 function shuffle_assoc($list) { 
   if (!is_array($list)) return $list; 
