@@ -1,4 +1,5 @@
 <?php
+
 function load($url)
 {
     $ch = curl_init();
@@ -20,20 +21,6 @@ function config($key)
     return $conf;
 }
 
-function skycodes_hash_matxrix( $string, $action = 'e' ) {
-  $secret_key = 'Quadplaymovies';
-  $secret_iv = 'googleitboss';
-  $output = false;
-  $encrypt_method = "AES-256-CBC";
-  $key = hash( 'sha256', $secret_key );
-  $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
-  if( $action == 'e' ) {
-    $output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
-  }else if( $action == 'd' ){
-    $output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
-  }
-  return $output;
-}
 function head_content()
 {
     $id = config('google.webmaster.id');
@@ -91,20 +78,6 @@ function directdl($id, $token)
     return $downloadUrl;
 }
 
-function renames($id, $name, $token)
-{
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, 'https://www.googleapis.com/drive/v3/files/' . $id);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json', 'Authorization: Bearer ' . $token));
-	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
-	curl_setopt($ch, CURLOPT_POSTFIELDS, '{"name": "' . $name . '"}');
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	$response = curl_exec($ch);
-	curl_close($ch);
-
-	return $response;
-}
-
 function directdl2($id)
 {
     $ch = curl_init("https://drive.google.com/uc?id=$id&authuser=0&export=download");
@@ -129,7 +102,7 @@ function directdl2($id)
     return $object[downloadUrl];
 }
 
-function deletefile($id, $token)
+function delete($id, $token)
 {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files/$id?key=$token");
@@ -142,7 +115,41 @@ function deletefile($id, $token)
     curl_close($ch);
 }
 
-
+function deletefile($id, $token)
+{
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files/$id?key=$token");
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        "Authorization: Bearer $token"
+    ));
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $result = curl_exec($ch);
+    curl_close($ch);
+}
+function menu_fileteamdrive($token, $next, $q)
+{
+    $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, 'https://www.googleapis.com/drive/v3/drives/');
+   curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization: Bearer ' . $token
+        ));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $json = curl_exec($ch);
+    curl_close($ch);
+    $result = json_decode($json,true);
+    $teamdriveid= $result["drives"][0]['id'];
+    $teamdrivekey= $teamdriveid;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files?corpora=drive&includeItemsFromAllDrives=true&includeTeamDriveItems=true&supportsAllDrives=true&supportsTeamDrives=true&teamDriveId=$teamdrivekey&q=fullText+contains+%27$q%27&pageSize=15&fields=files(fileExtension%2Cid%2Cname%2Csize%2CoriginalFilename)%2CnextPageToken&access_token=$token&pageToken=$next");
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    $data = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($data, true);
+}
 function listdrives($token)
 {
    $ch = curl_init();
@@ -169,29 +176,6 @@ function menu_file($token, $next, $q)
     curl_close($ch);
     return json_decode($data, true);
 }
-function menu_fileteamdrive($token, $next, $q)
-{
-    $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, 'https://www.googleapis.com/drive/v3/drives/');
-   curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Authorization: Bearer ' . $token
-        ));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $json = curl_exec($ch);
-    curl_close($ch);
-    $result = json_decode($json,true);
-    $teamdriveid= $result["drives"][0]['id'];
-    $teamdrivekey= $teamdriveid;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files?corpora=drive&includeItemsFromAllDrives=true&includeTeamDriveItems=true&supportsAllDrives=true&supportsTeamDrives=true&teamDriveId=$teamdrivekey&q=fullText+contains+%27$q%27&pageSize=15&fields=files(fileExtension%2Cid%2Cname%2Csize%2CoriginalFilename)%2CnextPageToken&access_token=$token&pageToken=$next");
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    $data = curl_exec($ch);
-    curl_close($ch);
-    return json_decode($data, true);
-}
 
 function formatBytes($size, $precision = 2)
 {
@@ -204,6 +188,21 @@ function formatBytes($size, $precision = 2)
         'TB'
     );
     return round(pow(1024, $base - floor($base)) , $precision) . ' ' . $suffixes[floor($base) ];
+}
+
+function skycodes_hash_matxrix( $string, $action = 'e' ) {
+  $secret_key = 'Quadplaymovies';
+  $secret_iv = 'googleitboss';
+  $output = false;
+  $encrypt_method = "AES-256-CBC";
+  $key = hash( 'sha256', $secret_key );
+  $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+  if( $action == 'e' ) {
+    $output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
+  }else if( $action == 'd' ){
+    $output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
+  }
+  return $output;
 }
 
 function activity($user_id, $file_id, $title, $format, $size, $mime)
@@ -270,11 +269,11 @@ function anyone2($id, $token)
 }
 function copyfile2($id, $token, $folder)
 {
-    $url = "https://www.googleapis.com/drive/v2/files/$id/copy?supportsAllDrives=true&supportsTeamDrives=true";
+    $url = "https://www.googleapis.com/drive/v2/files/$id/copy";
     $authorization = "Authorization: Bearer $token";
     $data = array(
         "parents" => [["id" => $folder]],
-        'description' => 'download from Driveup.in'
+        'description' => 'download from Google Sharer'
     );
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -309,7 +308,7 @@ function copyfile2teamdrive($id, $token)
             curl_close($ch);
             $result = json_decode($json,true);
             $teamdriveid= $result["drives"][0]['id'];
-            $url = "https://www.googleapis.com/drive/v2/files/$id/copy?supportsAllDrives=true&supportsTeamDrives=true";
+            $url = "https://www.googleapis.com/drive/v2/files/$id/copy?supportsAllDrives=true&supportsTeamDrives=true&key='$token'";
             $authorization = "Authorization: Bearer $tokend";
             $tdfolder = $teamdriveid;
             $data = array(
@@ -338,70 +337,6 @@ function copyfile2teamdrive($id, $token)
             return $filedid;
 }
 
-function addvery($login, $key, $url)
-{
-    $curl = curl_init();
-    $opts = [CURLOPT_URL => 'https://api.verystream.com/remotedl/add?login=' . $login . '&key=' . $key . '&url=' . $url . '', CURLOPT_RETURNTRANSFER => true, ];
-    curl_setopt_array($curl, $opts);
-    $response = json_decode(curl_exec($curl) , true);
-    return $response;
-}
-function checkvery($login, $key, $id)
-{
-    $curl = curl_init();
-    $opts = [CURLOPT_URL => 'https://api.verystream.com/remotedl/status?login=' . $login . '&key=' . $key . '&id=' . $id . '', CURLOPT_RETURNTRANSFER => true, ];
-    curl_setopt_array($curl, $opts);
-    $response = json_decode(curl_exec($curl) , true);
-    return $response;
-}
-function addmango($login, $key, $url)
-{
-    $curl = curl_init();
-    $opts = [CURLOPT_URL => 'https://api.fruithosted.net/remotedl/add?login=' . $login . '&key=' . $key . '&url=' . $url . '', CURLOPT_RETURNTRANSFER => true, ];
-    curl_setopt_array($curl, $opts);
-    $response = json_decode(curl_exec($curl) , true);
-    return $response;
-}
-function checkmango($login, $key, $id)
-{
-    $curl = curl_init();
-    $opts = [CURLOPT_URL => 'https://api.fruithosted.net/remotedl/status?login=' . $login . '&key=' . $key . '&id=' . $id . '', CURLOPT_RETURNTRANSFER => true, ];
-    curl_setopt_array($curl, $opts);
-    $response = json_decode(curl_exec($curl) , true);
-    return $response;
-}
-function addvid($login, $key, $url)
-{
-    $curl = curl_init();
-    $opts = [CURLOPT_URL => 'https://api.streamtape.com/remotedl/add?login=' . $login . '&key=' . $key . '&url=' . $url . '', CURLOPT_RETURNTRANSFER => true, ];
-    curl_setopt_array($curl, $opts);
-    $response = json_decode(curl_exec($curl) , true);
-    return $response;
-}
-function checkvid($login, $key, $id)
-{
-    $curl = curl_init();
-    $opts = [CURLOPT_URL => 'https://api.streamtape.com/remotedl/add?login=' . $login . '&key=' . $key . '&id=' . $id . '', CURLOPT_RETURNTRANSFER => true, ];
-    curl_setopt_array($curl, $opts);
-    $response = json_decode(curl_exec($curl) , true);
-    return $response;
-}
-function addmix($login, $key, $url)
-{
-    $curl = curl_init();
-    $opts = [CURLOPT_URL => 'https://api.mixdrop.co/remoteupload?email=' . $login . '&key=' . $key . '&url=' . $url . '', CURLOPT_RETURNTRANSFER => true, ];
-    curl_setopt_array($curl, $opts);
-    $response = json_decode(curl_exec($curl) , true);
-    return $response;
-}
-function checkmix($login, $key, $id)
-{
-    $curl = curl_init();
-    $opts = [CURLOPT_URL => 'https://api.mixdrop.co/remotestatus?email=' . $login . '&key=' . $key . '&id=' . $id . '', CURLOPT_RETURNTRANSFER => true, ];
-    curl_setopt_array($curl, $opts);
-    $response = json_decode(curl_exec($curl) , true);
-    return $response;
-}
 function totaluser()
 {
     $getuser = glob("base/data/user/*.json");
@@ -414,15 +349,6 @@ function totalshare()
     $totalshare = count($getshare);
     return $totalshare;
 }
-function countdownloads()
-{
-    $file = "base/data/main/share/$_GET[id].json";
-	$json = json_decode(file_get_contents($file), true);
-	$json['count'] = $json['count'] + 1;
-	file_put_contents($file, json_encode($json));
-// 	echo 'success';
-}
-
 function checksize()
 {
     $file = "base/data/setting/totalsize.json";
@@ -431,16 +357,15 @@ function checksize()
         unlink($file);
     }
     $getshare = glob("base/data/main/share/*.json");
-    $dat = array();
     foreach ($getshare as $getsize)
     {
         $data = file_get_contents($getsize);
         $content = json_decode($data, true);
         $shareid = $content[file][share_id];
         $size = $content[file][size];
-        $dat[$shareid] = $size;
+        $get[$shareid] = $size;
+        file_put_contents("base/data/setting/totalsize.json", json_encode($get, true));
     }
-   file_put_contents("base/data/setting/totalsize.json", json_encode($dat, true));
 }
 function totalsize()
 {
@@ -573,35 +498,10 @@ function create_folder($token)
     curl_close($ch);
     return json_decode($result, true);
 }
-function create_foldertd($tokend, $filedid)
-{
-$postd = array(
-"role" => 'reader',
-"type" => 'anyone'
-);
-$url = "https://www.googleapis.com/drive/v2/files/$filedid/permissions?supportsAllDrives=true&supportsTeamDrives=true";
-$authorization = "Authorization: Bearer $tokend";
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    'Content-Type: application/json',
-    $authorization
-));
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postd));
-curl_setopt($ch, CURLOPT_ENCODING, '');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36');
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-$resultf = curl_exec($ch);
-curl_close($ch);
-}
 function move($file, $folder, $root, $token)
 {
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://www.googleapis.com/drive/v3/files/' . $file . '?addParents=' . $folder . '&removeParents=' . $root . '&supportsAllDrives=true&supportsTeamDrives=truefields=id%2c+parents');
+    curl_setopt($ch, CURLOPT_URL, 'https://www.googleapis.com/drive/v3/files/' . $file . '?addParents=' . $folder . '&removeParents=' . $root . '&fields=id%2c+parents');
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         'Authorization: Bearer ' . $token
     ));
@@ -611,11 +511,10 @@ function move($file, $folder, $root, $token)
     curl_close($ch);
     return $result;
 }
-
 function anyonefolder($folder, $token)
 {
     $post = array(
-        "role" => 'writer',
+        "role" => 'reader',
         "type" => 'anyone'
     );
     $url = "https://www.googleapis.com/drive/v2/files/$folder/permissions";
@@ -640,7 +539,7 @@ function anyonefolder($folder, $token)
 function copyfilev3($id, $token)
 {
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://www.googleapis.com/drive/v3/files/' . $id . '/copy?supportsAllDrives=true&supportsTeamDrives=true&access_token='.$token);
+    curl_setopt($ch, CURLOPT_URL, 'https://www.googleapis.com/drive/v3/files/' . $id . '/copy?access_token=' . $token);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         'Content-length: 0',
         'Content-type: application/json',
@@ -720,15 +619,14 @@ function total_size2()
         {
             unlink($cache);
         }
-        $dat = array();
         for ($i = 0;$i < $selisih;$i++)
         {
             $data = json_decode(file_get_contents($file[$i]) , true);
             $shareid = $data[file][share_id];
             $uk = $data[file][size];
-            $dat[$shareid] = $uk;
+            $get[$shareid] = $uk;
+            file_put_contents("base/data/setting/cache.json", json_encode($get, true));
         }
-        file_put_contents("base/data/setting/cache.json", json_encode($dat, true));
         $coba = json_decode(file_get_contents($cache) , true);
         $uk2 = array_sum($coba);
         $size = $cek[size] + $uk;
@@ -755,13 +653,30 @@ function checkfolder($id)
 function secure_link($id)
 {
 $domain = config('site.domain');
-$link = "https://$domain/secure.php?id=$id";
-$poster = "https://$domain/secure.php?poster=$id";
+$link = "https://$domain/secure/$id";
+$poster = "https://$domain/image/$id";
         $hasil = array(
             link => $link,
             poster => $poster
             );
     return $hasil;
+}
+
+function addvid($login, $key, $url)
+{
+    $curl = curl_init();
+    $opts = [CURLOPT_URL => 'https://api.streamtape.com/remotedl/add?login=' . $login . '&key=' . $key . '&url=' . $url . '', CURLOPT_RETURNTRANSFER => true, ];
+    curl_setopt_array($curl, $opts);
+    $response = json_decode(curl_exec($curl) , true);
+    return $response;
+}
+function checkvid($login, $key, $id)
+{
+    $curl = curl_init();
+    $opts = [CURLOPT_URL => 'https://api.streamtape.com/remotedl/add?login=' . $login . '&key=' . $key . '&id=' . $id . '', CURLOPT_RETURNTRANSFER => true, ];
+    curl_setopt_array($curl, $opts);
+    $response = json_decode(curl_exec($curl) , true);
+    return $response;
 }
 
 function ErrMessage($code){
@@ -787,16 +702,4 @@ function ErrMessage($code){
     }
     return $message;
 }
-
-function check_file_image($id)
-{
-    $key = "AIzaSyD-KhS42pyJkSmNTOMYrsre6WN2nDN7MPs";
-    $url = "https://www.googleapis.com/drive/v2/files/$id?&key=$key";
-    $curl = curl_init();
-    $opts = [CURLOPT_URL => $url, CURLOPT_RETURNTRANSFER => true, ];
-    curl_setopt_array($curl, $opts);
-    $response = json_decode(curl_exec($curl) , true);
-    return $response['thumbnailLink'];
-}
-
 ?>
